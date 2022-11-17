@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#script to display all ipv4 addresses
+
+ip  -o addr | awk '!/^[0-9]*: ?lo|link\/ether/ {print $2" "$4}'
