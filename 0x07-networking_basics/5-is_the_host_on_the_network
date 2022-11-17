@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#pings an IP address passed as an argument
+
+for input in "$@"
+
+do
+	ping = $(ping -c 1 $@ | grep bytes | wc -1)
+	if [ $ping -lt 6 ]; 
