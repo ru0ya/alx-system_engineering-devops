@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#character 't'matches a specified number of strings
+#regular expression that matches given string
 
 x = ARGV[0]
 puts x.match(/hbt{2, 5}n/).join
