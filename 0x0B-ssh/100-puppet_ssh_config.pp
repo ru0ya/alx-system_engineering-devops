@@ -4,6 +4,7 @@ ensure                 => 'file',
 mode                   => '0600',
 user                   => 'ubuntu',
 PasswordAuthentication => 'no',
+AuthenticationKey => 'yes',
 }
 
 
