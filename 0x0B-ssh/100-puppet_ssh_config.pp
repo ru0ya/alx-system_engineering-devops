@@ -1,12 +1,12 @@
-#updating a configuration file
-file{ '~/.ssh/school':
-ensure                 => 'file',
-mode                   => '0600',
-user                   => 'ubuntu',
-PasswordAuthentication => 'no',
-AuthenticationKey => 'yes',
+# Modify client config file
+include stdlib
+
+file { '/etc/ssh/ssh_config':
+  ensure => present,
+}-> file_line { 'Use private key in ~/.ssh/school':
+  path => '/etc/ssh/ssh_config',
+  line => 'IdentityFile ~/.ssh/school',
+}-> file_line { 'Disable password Authentication':
+  path => '/etc/ssh/ssh_config',
+  line => 'PasswordAuthentication no',
 }
-
-
-
-
