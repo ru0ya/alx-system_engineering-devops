@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Get active IPv4 IPs
+ips=$(ip addr show | grep inet | grep -v inet6 | awk '{print $2}')
+
+# Configure Nginx to listen on all active IPv4 IPs
+for ip in $ips; do
+  echo "server {
+    listen ${ip}:80;
+    ...
+  }" >> /etc/nginx/sites-enabled/default
+done
+
+# Reload Nginx configuration
+systemctl reload nginx
