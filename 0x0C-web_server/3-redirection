@@ -1,31 +1,18 @@
 #!/usr/bin/env bash
-# Install nginx on your web-01
-sudo apt update -y
-#installing nginx.
-sudo apt install nginx -y
-#making  directories
-sudo mkdir -p /var/www/html
-#creating file that contain our string
-sudo touch /var/www/html/index.html
-sudo chown -R "$USER":"$USER" /var/www/html/index.html
-echo "Hello World!" >/var/www/html/index.html
-sudo ufw allow 'Nginx HTTP'
+# Install nginx and start
+sudo apt-get -y install nginx
 
-SERVER_CONFIG="server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-	root /var/www/html;
-	index index.html index.htm index.nginx-debian.html;
-	server_name _;
-	location / {
-		try_files \$uri \$uri/ =404;
-	}
-	if (\$request_filename ~ redirect_me){
-		return 301 https://github.com/ru0ya;
-	}
-}"
+# Firewall setting: Allow Nginx to serve on HTTP
+ufw allow 'Nginx HTTP'
 
-echo -e "$SERVER_CONFIG" >/etc/nginx/sites-enabled/default
+# Override the default index file served as home page
+echo "Hello World!" >> /var/www/html/index.html
 
-# You can’t use systemctl for restarting nginx
-sudo service nginx restart
+#Give the user  ownership
+sudo chown -R $USER:$USER /var/www/html
+sudo chmod -R 755 /var/www
+
+# Redirect to /redirect_me
+sed -i '37i\rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+
+service nginx start

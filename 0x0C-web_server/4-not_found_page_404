@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Install nginx on your web-01
-apt-get update
-apt-get -y install nginx
+sudo apt-get update
+sudo apt-get -y install nginx
 
 # Nginx listens by default on Port 80.
 # ufw firewall to get requests
@@ -29,7 +29,7 @@ server {
 		try_files \$uri \$uri/ =404;
 	}
 	if (\$request_filename ~ redirect_me){
-		return 301 https://github.com/Trefania;
+		return 301 https://github.com/ru0ya;
 	}
 	error_page 404 /custom_404.html;
 		location /custom_404.html {
