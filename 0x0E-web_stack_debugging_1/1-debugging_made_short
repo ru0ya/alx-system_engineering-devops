@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-# Using what you did for task #0, make your fix short and sweet.
-
-FILE="/etc/nginx/sites-enabled/default"
-[ -L "$FILE" ] && service nginx restart || ln -sf /etc/nginx/sites-available/default "$FILE"
-service nginx restart
-kill "$(pgrep 'nginx' | head -1)"
+sed -i "s/8080/80/g" /etc/nginx/sites-enabled/default
+systemctl restart nginx
+echo "" > /run/nginx.pid
+systemctl status nginx
