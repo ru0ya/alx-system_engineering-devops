@@ -1,14 +1,7 @@
 #!/usr/bin/env bash
-# Get active IPv4 IPs
-ips=$(ip addr show | grep inet | grep -v inet6 | awk '{print $2}')
+# what’s keeping your Ubuntu container’s Nginx installation from listening on port 8?
+# configures nginx to run and listen to port 80
 
-# Configure Nginx to listen on all active IPv4 IPs
-for ip in $ips; do
-  echo "server {
-    listen ${ip}:80;
-    ...
-  }" >> /etc/nginx/sites-enabled/default
-done
-
-# Reload Nginx configuration
-systemctl reload nginx
+rm /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+service nginx restart
