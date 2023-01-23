@@ -1,5 +1,91 @@
-#!/usr/bin/env bash
-sed -i "s/8080/80/g" /etc/nginx/sites-enabled/default
-systemctl restart nginx
-echo "" > /run/nginx.pid
-systemctl status nginx
+#!/bin/bash
+
+# Update package list
+sudo apt-get update
+
+# Install HAproxy
+sudo apt-get install haproxy -y
+
+# Configure HAproxy
+echo "
+global
+    log /dev/log    local0
+    log /dev/log    local1 notice
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    log global
+    mode    http
+    option  httplog
+    option  dontlognull
+    timeout connect 5000
+    timeout client  50000
+    timeout server  50000
+
+frontend http-in
+    bind *:80
+    default_backend servers
+
+backend servers
+    balance roundrobin
+    server [STUDENT_ID]-web-01 [STUDENT_ID]-web-01:80 check
+    server [STUDENT_ID]-web-02 [STUDENT_ID]-web-02:80 check
+" > /etc/haproxy/haproxy.cfg
+
+# Configure init script
+echo "
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          haproxy
+# Required-Start:    $syslog $remote_fs
+# Required-Stop:     $syslog $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop haproxy
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/haproxy
+NAME=haproxy
+DESC=haproxy
+
+test -x $DAEMON || exit 0
+
+# Include haproxy defaults if available
+if [ -f /etc/default/haproxy ] ; then
+        . /etc/default/haproxy
+fi
+
+set -e
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: "
+        start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
+                --exec $DAEMON -- $HAPROXY_OPTS
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+        start-stop-daemon --stop --quiet --pidfile /var/run/$NAME.pid \
+                --exec $DAEMON
+        echo "$NAME."
+        ;;
+  reload|force-reload)
+        echo -n "Reloading $DESC configuration: "
+        start-stop-daemon --stop --quiet --pidfile /var/run/$NAME.pid \
+                --exec $DAEMON -sf $(cat /var/run/$NAME.pid)
+        echo "$NAME."
+        ;;
+  restart)
+        echo -n "Restarting $DESC: "
+        start-stop-daemon --stop --quiet --pidfile \
+                /var/run/$NAME.pid --exec $DAEMON
+        sleep 1
+        start-stop-daemon --start --quiet --
+
