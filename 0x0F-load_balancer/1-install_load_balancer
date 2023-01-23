@@ -29,63 +29,15 @@ defaults
 
 frontend http-in
     bind *:80
-    default_backend servers
+    default_backend ruoya-backend
 
 backend servers
     balance roundrobin
-    server [STUDENT_ID]-web-01 [STUDENT_ID]-web-01:80 check
-    server [STUDENT_ID]-web-02 [STUDENT_ID]-web-02:80 check
-" > /etc/haproxy/haproxy.cfg
+    server 84371-web-01 84371-web-01:80 check
+    server 84371-web-02 84371-web-02:80 check
+" 
+echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
-# Configure init script
-echo "
-#!/bin/bash
-### BEGIN INIT INFO
-# Provides:          haproxy
-# Required-Start:    $syslog $remote_fs
-# Required-Stop:     $syslog $remote_fs
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start/stop haproxy
-### END INIT INFO
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
 
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/usr/sbin/haproxy
-NAME=haproxy
-DESC=haproxy
-
-test -x $DAEMON || exit 0
-
-# Include haproxy defaults if available
-if [ -f /etc/default/haproxy ] ; then
-        . /etc/default/haproxy
-fi
-
-set -e
-
-case "$1" in
-  start)
-        echo -n "Starting $DESC: "
-        start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
-                --exec $DAEMON -- $HAPROXY_OPTS
-        echo "$NAME."
-        ;;
-  stop)
-        echo -n "Stopping $DESC: "
-        start-stop-daemon --stop --quiet --pidfile /var/run/$NAME.pid \
-                --exec $DAEMON
-        echo "$NAME."
-        ;;
-  reload|force-reload)
-        echo -n "Reloading $DESC configuration: "
-        start-stop-daemon --stop --quiet --pidfile /var/run/$NAME.pid \
-                --exec $DAEMON -sf $(cat /var/run/$NAME.pid)
-        echo "$NAME."
-        ;;
-  restart)
-        echo -n "Restarting $DESC: "
-        start-stop-daemon --stop --quiet --pidfile \
-                /var/run/$NAME.pid --exec $DAEMON
-        sleep 1
-        start-stop-daemon --start --quiet --
-
+sudo service haproxy restart
