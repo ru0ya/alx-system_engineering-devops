@@ -2,5 +2,5 @@
 # Automatizing the nginx configuration
 sudo apt-get -y update
 sudo apt-get -y install nginx
-sudo sed -i "/listen 80 default_server/i add_header X-Served-By $HOSTNAME;"/etc/nginx/sites-available/default
+sudo sed -i "\\\tadd_header X-Served-By 84371-web-01;" /etc/nginx/nginx.conf
 sudo service nginx restart
