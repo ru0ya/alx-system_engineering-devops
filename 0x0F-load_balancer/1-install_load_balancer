@@ -37,8 +37,8 @@ frontend $DOMAIN_NAME-frontend
 
 backend servers
     balance roundrobin
-    server 84371-web-01 34.227.91.246:80 check
-    server 84371-web-02 100.25.157.236:80 check
+    server 84371-web-01 100.25.140.162:80 check
+    server 84371-web-02 54.88.135.86:80 check
 EOL"
 
 # Enable and start HAproxy service
