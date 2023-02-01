@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+sed -i 's/www-data/nginx/' /etc/nginx/nginx.conf
+sed -i 's/80/8080/' /etc/nginx/sites-available/default
+sed -i 's/0.0.0.0:80/0.0.0.0:8080/' /etc/nginx/sites-available/default
+chmod 644 /etc/nginx/nginx.conf
+pkill apache
+nginx -c /etc/nginx/nginx.conf
+
