@@ -33,7 +33,8 @@ defaults
 
 frontend $DOMAIN_NAME-frontend
     bind *:80
-    default_backend servers
+    mode http
+    default_backend $DOMAIN_NAME-backend
 
 backend servers
     balance roundrobin
