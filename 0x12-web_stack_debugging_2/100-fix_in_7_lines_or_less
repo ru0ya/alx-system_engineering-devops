@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-sed -i 's/www-data/nginx/' /etc/nginx/nginx.conf
-sed -i 's/80/8080/' /etc/nginx/sites-available/default
-sed -i 's/0.0.0.0:80/0.0.0.0:8080/' /etc/nginx/sites-available/default
-chmod 644 /etc/nginx/nginx.conf
-pkill apache
-nginx -c /etc/nginx/nginx.conf
+# Using what you did for task #1, make your fix short and sweet.
+sudo pkill apache2
+sudo chmod 777 /etc/nginx/nginx.conf
+sudo sed -i 's/#user www-data/user nginx/' /etc/nginx/nginx.conf
+sudo sed -i 's/80 default/8080 default/' /etc/nginx/sites-available/default
+sudo -u nginx service nginx restart
 
