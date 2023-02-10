@@ -3,6 +3,7 @@
 
 import requests
 import sys
+import csv
 
 
 if __name__ == '__main__':
@@ -24,8 +25,8 @@ if __name__ == '__main__':
             completed_tasks.append(task1)
             completed += 1
 
-    print("Employee {} is done with tasks({}/{}):"
-          .format(emp_names, completed, len(tasks)))
+
+    with open("{}", mode="w") as f:
 
     for task1 in completed_tasks:
         print("\t {}".format(task1.get('title')))
