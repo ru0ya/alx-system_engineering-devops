@@ -8,7 +8,6 @@ the function should return 0.
 """
 
 import requests
-import json
 
 
 def top_ten(subreddit):
