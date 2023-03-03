@@ -22,7 +22,8 @@ def recurse(subreddit, hot_list=[], after=None):
     if after:
         params['after'] = after
 
-    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
 
     if response.status_code != 200:
         return None
@@ -39,4 +40,3 @@ def recurse(subreddit, hot_list=[], after=None):
         recurse(subreddit, hot_list, after)
 
     return hot_list
-
