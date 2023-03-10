@@ -1,5 +1,6 @@
+# Increases number of requests from 15
 exec{ 'fixing-nginx':
-command  =>  'sed-i "s/15/4096" /etc/default/nginx',
+command =>  'sed-i "s/15/4096" /etc/default/nginx',
 path    =>  '/usr/local/bin/:/bin/'
 }
 
