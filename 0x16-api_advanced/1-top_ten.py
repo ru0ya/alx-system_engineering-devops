@@ -1,24 +1,22 @@
 #!/usr/bin/python3
-"""
-function that queries Reddit API and
-returns the number of subscribers
-(not active users, total subscribers) for a given subreddit.
-If an invalid subreddit is given,
-the function should return 0.
-"""
-
+"""Contains top_ten function"""
 import requests
 
 
 def top_ten(subreddit):
-    """gets the top ten post in a subreddit"""
-    url = 'https://www.reddit.com/r/{}/top.json'.format(subreddit)
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, headers=headers, allow_redirects=False)
-
-    if response.status_code == 200:
-        data = response.json()
-        for post in data['data']['children'][:10]:
-            print(post['data']['title'])
-    else:
-        print(None)
+    """Print the titles of the 10 hottest posts on a given subreddit."""
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    headers = {
+        "User-Agent": "0x16-api_advanced:project:\
+v1.0.0 (by /u/firdaus_cartoon_jr)"
+    }
+    params = {
+        "limit": 10
+    }
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
+    if response.status_code == 404:
+        print("None")
+        return
+    results = response.json().get("data")
+    [print(c.get("data").get("title")) for c in results.get("children")]
